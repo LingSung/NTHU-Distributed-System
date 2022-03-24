@@ -1,4 +1,3 @@
-
 name: main workflow
 
 on: push
@@ -51,7 +50,6 @@ jobs:
         key: ${{ runner.os }}-gocache-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-gocache-
-
     - name: test
       run: go test -v -race ./...
 
@@ -79,12 +77,10 @@ jobs:
         key: ${{ runner.os }}-gocache-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-gocache-
-
     - name: build
       run: |
         mkdir -p ./bin/app
         go build -o ./bin/app/cmd ./cmd/main.go
-
     - name: login ghcr
       uses: docker/login-action@v1
       with:
@@ -98,7 +94,6 @@ jobs:
     - name: set image name
       run: |
         echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> ${{ github.env }}
-
     - name: docker build and push
       uses: docker/build-push-action@v2
       with:
