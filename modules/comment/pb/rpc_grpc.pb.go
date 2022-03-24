@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommentClient interface {
 	Healthz(ctx context.Context, in *HealthzRequest, opts ...grpc.CallOption) (*HealthzResponse, error)
+	// TODO: Complete the following RPC service with correct parameter, return type and gateway option.
 	ListComment(ctx context.Context, in *ListCommentRequest, opts ...grpc.CallOption) (*ListCommentResponse, error)
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*CreateCommentResponse, error)
 	UpdateComment(ctx context.Context, in *UpdateCommentRequest, opts ...grpc.CallOption) (*UpdateCommentResponse, error)
@@ -97,6 +98,7 @@ func (c *commentClient) DeleteCommentByVideoID(ctx context.Context, in *DeleteCo
 // for forward compatibility
 type CommentServer interface {
 	Healthz(context.Context, *HealthzRequest) (*HealthzResponse, error)
+	// TODO: Complete the following RPC service with correct parameter, return type and gateway option.
 	ListComment(context.Context, *ListCommentRequest) (*ListCommentResponse, error)
 	CreateComment(context.Context, *CreateCommentRequest) (*CreateCommentResponse, error)
 	UpdateComment(context.Context, *UpdateCommentRequest) (*UpdateCommentResponse, error)
