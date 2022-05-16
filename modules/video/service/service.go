@@ -122,6 +122,12 @@ func (s *service) UploadVideo(stream pb.Video_UploadVideoServer) error {
 
 	// [Kafka TODO]
 	// [Describe] Video now is uploaded successfully, try to take advantage of produceVideoCreatedEvent here to send messages.
+	if err := s.produceVideoCreatedEvent(&pb.HandleVideoCreatedRequest{
+		Id:  id.Hex(),
+		Url: path.Join(s.storage.Endpoint(), s.storage.Bucket(), objectName),
+	}); err != nil {
+		return err
+	}
 
 	if err := stream.SendAndClose(&pb.UploadVideoResponse{
 		Id: id.Hex(),
@@ -167,6 +173,9 @@ func (s *service) produceVideoCreatedEvent(req *pb.HandleVideoCreatedRequest) er
 
 	// [Kafka TODO]
 	// [Describe] Send message to kafka via sarama producer
+	if err := s.producer.SendMessages(msgs); err != nil {
+		return err
+	}
 
 	return nil
 }
