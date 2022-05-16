@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-gateway
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: video-gateway
+        image: ghcr.io/nthu-lsalab/nthu-distributed-system:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+        command:
+        - /cmd
+        - video
+        - gateway
+        env:
+        - name: GRPC_SERVER_ADDR
+          value: video-api:8081
+        resources:
+          requests:
+            memory: 25Mi
+            cpu: 25m
+          limits:
+            memory: 50Mi
+            cpu: 50m

@@ -26,7 +26,7 @@ import (
 func newAPICommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "api",
-		Short: "starts Video API server",
+		Short: "starts video API server",
 		RunE:  runAPI,
 	}
 }
@@ -38,9 +38,9 @@ type APIArgs struct {
 	logkit.LoggerConfig                  `group:"logger" namespace:"logger" env-namespace:"LOGGER"`
 	mongokit.MongoConfig                 `group:"mongo" namespace:"mongo" env-namespace:"MONGO"`
 	storagekit.MinIOConfig               `group:"minio" namespace:"minio" env-namespace:"MINIO"`
-	kafkakit.KafkaProducerConfig         `group:"kafka" namespace:"kafka" env-namespace:"KAFKA"`
 	rediskit.RedisConfig                 `group:"redis" namespace:"redis" env-namespace:"REDIS"`
 	otelkit.PrometheusServiceMeterConfig `group:"meter" namespace:"meter" env-namespace:"METER"`
+	kafkakit.KafkaProducerConfig         `group:"kafka_producer" namespace:"kafka_producer" env-namespace:"KAFKA_PRODUCER"`
 }
 
 func runAPI(_ *cobra.Command, _ []string) error {
@@ -53,9 +53,7 @@ func runAPI(_ *cobra.Command, _ []string) error {
 
 	logger := logkit.NewLogger(&args.LoggerConfig)
 	defer func() {
-		if err := logger.Sync(); err != nil {
-			log.Fatal("failed to sync logger", err.Error())
-		}
+		_ = logger.Sync()
 	}()
 
 	ctx = logger.WithContext(ctx)
@@ -81,7 +79,7 @@ func runAPI(_ *cobra.Command, _ []string) error {
 		}
 	}()
 
-	producer := kafkakit.NewProducer(ctx, &args.KafkaProducerConfig)
+	producer := kafkakit.NewKafkaProducer(ctx, &args.KafkaProducerConfig)
 	defer func() {
 		if err := producer.Close(); err != nil {
 			logger.Fatal("failed to close Kafka producer", zap.Error(err))

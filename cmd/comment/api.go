@@ -24,7 +24,7 @@ import (
 func newAPICommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "api",
-		Short: "starts Comment API server",
+		Short: "starts comment API server",
 		RunE:  runAPI,
 	}
 }
@@ -49,9 +49,7 @@ func runAPI(_ *cobra.Command, _ []string) error {
 
 	logger := logkit.NewLogger(&args.LoggerConfig)
 	defer func() {
-		if err := logger.Sync(); err != nil {
-			log.Fatal("failed to sync logger", err.Error())
-		}
+		_ = logger.Sync()
 	}()
 
 	ctx = logger.WithContext(ctx)

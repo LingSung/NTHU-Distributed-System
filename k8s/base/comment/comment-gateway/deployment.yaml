@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment-gateway
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: comment-gateway
+        image: ghcr.io/nthu-lsalab/nthu-distributed-system:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+        command:
+        - /cmd
+        - comment
+        - gateway
+        env:
+        - name: GRPC_SERVER_ADDR
+          value: comment-api:8081
+        resources:
+          requests:
+            memory: 25Mi
+            cpu: 25m
+          limits:
+            memory: 50Mi
+            cpu: 50m

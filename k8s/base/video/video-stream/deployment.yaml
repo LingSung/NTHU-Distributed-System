@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-stream
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: video-stream
+        image: ghcr.io/nthu-lsalab/nthu-distributed-system:latest
+        imagePullPolicy: Always
+        command:
+        - /cmd
+        - video
+        - stream
+        env:
+        - name: KAFKA_CONSUMER_ADDRS
+          value: kafka:9092
+        - name: KAFKA_CONSUMER_GROUP
+          value: video-stream
+        - name: KAFKA_CONSUMER_TOPIC
+          value: video
+        - name: KAFKA_PRODUCER_ADDRS
+          value: kafka:9092
+        - name: KAFKA_PRODUCER_TOPIC
+          value: video
+        - name: MONGO_DATABASE
+          value: nthu_distributed_system
+        - name: MONGO_URL
+          value: mongodb://mongodb:27017/
+        resources:
+          requests:
+            memory: 25Mi
+            cpu: 25m
+          limits:
+            memory: 50Mi
+            cpu: 50m
