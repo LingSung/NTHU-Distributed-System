@@ -24,7 +24,7 @@ import (
 func newAPICommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "api",
-		Short: "starts Comment API server",
+		Short: "starts comment API server",
 		RunE:  runAPI,
 	}
 }
@@ -101,7 +101,9 @@ func runAPI(_ *cobra.Command, _ []string) error {
 		}
 	}()
 
-	return runkit.GracefulRun(serveGRPC(lis, svc, logger, grpc.UnaryInterceptor(meter.UnaryServerInterceptor())), &args.GracefulConfig)
+	// add interceptor here to update metrics
+	// TODO
+	return runkit.GracefulRun(serveGRPC(lis, svc, logger), &args.GracefulConfig)
 }
 
 func serveGRPC(lis net.Listener, svc pb.CommentServer, logger *logkit.Logger, opt ...grpc.ServerOption) runkit.GracefulRunFunc {
